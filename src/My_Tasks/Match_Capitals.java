@@ -1,6 +1,7 @@
 package My_Tasks;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -23,6 +24,9 @@ public class Match_Capitals {
 
         driver.get("http://www.dhtmlgoodies.com/scripts/drag-drop-custom/demo-drag-drop-3.html");
 
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
+
         List<WebElement> cities = driver.findElements(By.cssSelector("div[id='dropContent']>.dragableBox"));
         cities.removeIf(n->(n.getAttribute("id").startsWith("D")));
 
@@ -37,7 +41,9 @@ public class Match_Capitals {
 
                 if (cityId.substring(3).equals(countryId.substring(5))){
                     wait.until(ExpectedConditions.visibilityOf(country));
-                    actions.clickAndHold(city).moveToElement(country).release(country).build().perform();
+                    actions.dragAndDrop(city,country).perform();
+                    // -->other method is below
+                    //actions.clickAndHold(city).moveToElement(country).release(country).build().perform();
                     break;
                 }
             }
